@@ -57,13 +57,13 @@ public class ClientServiceTest {
         ClientResponse response = new ClientResponse();
         List<ClientResponse> expectedResponses = List.of(response);
 
-        when(clientRepository.findAllByFilter(ClientStatus.NEW, "Иван")).thenReturn(clients);
+        when(clientRepository.findAllByStatusAndSearch(ClientStatus.NEW, "Иван")).thenReturn(clients);
         when(clientMapper.toResponseList(clients)).thenReturn(expectedResponses);
 
         List<ClientResponse> result = clientService.getClients(ClientStatus.NEW, "Иван");
 
         assertThat(result).isEqualTo(expectedResponses);
-        verify(clientRepository).findAllByFilter(ClientStatus.NEW, "Иван");
+        verify(clientRepository).findAllByStatusAndSearch(ClientStatus.NEW, "Иван");
         verify(clientMapper).toResponseList(clients);
     }
 

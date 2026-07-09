@@ -14,10 +14,15 @@ import java.util.List;
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
     @Query("SELECT c FROM Client c WHERE " +
-           "(:status IS NULL OR c.status = :status) AND " +
-           "(:search IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', :search, '%')) OR c.phone LIKE CONCAT('%', :search, '%')) " +
+           "(:status IS NULL OR c.status = :status) " +
            "ORDER BY c.createdAt DESC")
-    List<Client> findAllByFilter(@Param("status") ClientStatus status, @Param("search") String search);
+    List<Client> findAllByStatus(@Param("status") ClientStatus status);
+
+    @Query("SELECT c FROM Client c WHERE " +
+           "(:status IS NULL OR c.status = :status) AND " +
+           "(LOWER(c.name) LIKE LOWER(CONCAT('%', :search, '%')) OR c.phone LIKE CONCAT('%', :search, '%')) " +
+           "ORDER BY c.createdAt DESC")
+    List<Client> findAllByStatusAndSearch(@Param("status") ClientStatus status, @Param("search") String search);
 
     @Query("SELECT new com.lawtrack.dto.response.StatusCountResponse(" +
            "COALESCE(SUM(CASE WHEN c.status = com.lawtrack.entity.ClientStatus.NEW THEN 1L ELSE 0L END), 0L), " +

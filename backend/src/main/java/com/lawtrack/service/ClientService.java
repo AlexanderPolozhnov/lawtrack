@@ -33,7 +33,12 @@ public class ClientService {
     private final TelegramNotificationService telegramNotificationService;
 
     public List<ClientResponse> getClients(ClientStatus status, String search) {
-        List<Client> clients = clientRepository.findAllByFilter(status, search);
+        List<Client> clients;
+        if (search == null || search.trim().isEmpty()) {
+            clients = clientRepository.findAllByStatus(status);
+        } else {
+            clients = clientRepository.findAllByStatusAndSearch(status, search.trim());
+        }
         return clientMapper.toResponseList(clients);
     }
 
