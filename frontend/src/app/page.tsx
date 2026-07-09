@@ -11,7 +11,7 @@ import AddClientDialog from "@/components/add-client-dialog";
 import ClientDetailsDrawer from "@/components/client-details-drawer";
 import ThemeToggle from "@/components/theme-toggle";
 import { useClients } from "@/hooks/use-clients";
-import { AlertCircle, Plus } from "lucide-react";
+import { AlertCircle, Plus, HelpCircle, X } from "lucide-react";
 
 const mockCounts = {
   newCount: 1,
@@ -23,7 +23,7 @@ const mockCounts = {
 const mockClients = [
   {
     id: 1,
-    name: "Иван Иванов (Демо)",
+    name: "Иван Ivanov (Демо)",
     phone: "+79991112233",
     status: "NEW" as const,
     statusDisplayName: "Новый",
@@ -59,6 +59,7 @@ export default function Home() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   const {
     data: statusCounts,
@@ -118,6 +119,15 @@ export default function Home() {
                 API Активно
               </span>
             )}
+            
+            <button
+              onClick={() => setIsHelpOpen(true)}
+              className="inline-flex items-center justify-center gap-1.5 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 font-semibold text-xs px-3 py-2 rounded-xl transition-all duration-200 cursor-pointer"
+              title="Как протестировать?"
+            >
+              <HelpCircle className="w-3.5 h-3.5 text-indigo-500" />
+              <span className="hidden md:inline">Как протестировать?</span>
+            </button>
             
             <button
               onClick={() => setIsAddDialogOpen(true)}
@@ -232,6 +242,131 @@ export default function Home() {
         clientId={selectedClientId}
         clients={displayClients}
       />
+
+      {/* Help Dialog */}
+      {isHelpOpen && (
+        <div className="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            {/* Modal Header */}
+            <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-950/50 flex items-center justify-center">
+                  <HelpCircle className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">Инструкция: Как протестировать CRM?</h3>
+              </div>
+              <button
+                onClick={() => setIsHelpOpen(false)}
+                className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Content (Scrollable) */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 text-sm text-slate-600 dark:text-slate-400">
+              <p>
+                Добро пожаловать! Ниже приведен пошаговый сценарий, по которому вы (или представитель компании-работодателя) можете оценить работу CRM-системы <strong>LawTrack</strong> за 2 минуты.
+              </p>
+
+              {/* Step 1 */}
+              <div className="space-y-2 border-l-2 border-indigo-500 pl-4">
+                <h4 className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-400 font-bold text-xs flex items-center justify-center">1</span>
+                  Переключение темы оформления
+                </h4>
+                <p>
+                  Нажмите на кнопку с иконкой солнца/луны в верхнем меню. Интерфейс плавно перестроится под темную/светлую палитру, включая списки, таблицы и боковые панели.
+                </p>
+              </div>
+
+              {/* Step 2 */}
+              <div className="space-y-2 border-l-2 border-indigo-500 pl-4">
+                <h4 className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-400 font-bold text-xs flex items-center justify-center">2</span>
+                  Создание клиента с валидацией
+                </h4>
+                <p>
+                  Нажмите кнопку <strong>Добавить клиента</strong>. Попробуйте отправить пустую форму, чтобы увидеть интерактивные подсказки Zod-валидации. Заполните корректно имя, телефон и срок дела. При сохранении клиент сразу добавится наверх таблицы, а счетчики обновятся на <code>+1</code>.
+                </p>
+              </div>
+
+              {/* Step 3 */}
+              <div className="space-y-2 border-l-2 border-indigo-500 pl-4">
+                <h4 className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-400 font-bold text-xs flex items-center justify-center">3</span>
+                  Быстрая смена статуса (Optimistic Updates)
+                </h4>
+                <p>
+                  В таблице в строке созданного клиента кликните на статус-бейдж (например, <em>Новый</em>) и выберите <em>В работе</em>. Благодаря <strong>Optimistic Updates</strong>, бейдж и верхние карточки статистики изменятся мгновенно, не дожидаясь ответа сервера.
+                </p>
+              </div>
+
+              {/* Step 4 */}
+              <div className="space-y-2 border-l-2 border-indigo-500 pl-4">
+                <h4 className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-400 font-bold text-xs flex items-center justify-center">4</span>
+                  Хронология и заметки (Drawer)
+                </h4>
+                <p>
+                  Кликните по строке любого клиента в таблице. Справа выедет Drawer-панель. На анимированном таймлайне отобразится вся история дела (когда клиент был создан, когда сменился статус). Напишите текстовую заметку в форму снизу — она тут же добавится в историю.
+                </p>
+              </div>
+
+              {/* Step 5 */}
+              <div className="space-y-2 border-l-2 border-indigo-500 pl-4">
+                <h4 className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-400 font-bold text-xs flex items-center justify-center">5</span>
+                  Контроль просроченных дедлайнов
+                </h4>
+                <p>
+                  Добавьте клиента со сроком дела в <em>прошлом</em>. Дата дедлайна в таблице загорится ярким алым цветом с мигающей иконкой предупреждения ⚠️. Бейдж дедлайна сбросится, как только вы переведете клиента в статус <em>Закрыт</em>.
+                </p>
+              </div>
+
+              {/* Step 6 */}
+              <div className="space-y-2 border-l-2 border-indigo-500 pl-4">
+                <h4 className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-400 font-bold text-xs flex items-center justify-center">6</span>
+                  Асинхронные уведомления в Telegram (Бонус)
+                </h4>
+                <div className="space-y-2">
+                  <p>Для быстрой интеграции и проверки алертов:</p>
+                  <ol className="list-decimal list-inside pl-2 space-y-1 text-xs">
+                    <li>Перейдите к нашему боту: <a href="https://t.me/lawtrack_crm_alerts_bot" target="_blank" rel="noopener noreferrer" className="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold">@lawtrack_crm_alerts_bot</a></li>
+                    <li>Нажмите кнопку <strong>Запустить (/start)</strong>. Бот пришлет приветствие и автоматически привяжет ваш Chat ID к системе.</li>
+                    <li>Попробуйте добавить клиента или изменить его статус в CRM — бот мгновенно пришлет структурированный алерт.</li>
+                  </ol>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 italic">
+                    Примечание: Так как бэкенд развернут на бесплатном сервере Render, бот проверяет новые сообщения раз в 5 секунд.
+                  </p>
+                </div>
+              </div>
+
+              {/* Step 7 */}
+              <div className="space-y-2 border-l-2 border-indigo-500 pl-4">
+                <h4 className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-400 font-bold text-xs flex items-center justify-center">7</span>
+                  Проверка устойчивости (Демо-режим)
+                </h4>
+                <p>
+                  Даже если бэкенд выключен или недоступен, сайт включит <strong>Демо-режим</strong> (сверху загорится желтый бейдж). Весь функционал (добавление, смены статусов, фильтры, таймлайн) продолжит плавно работать локально прямо в браузере.
+                </p>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/30 flex justify-end">
+              <button
+                onClick={() => setIsHelpOpen(false)}
+                className="bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold text-xs px-4 py-2.5 rounded-xl transition-all duration-200 cursor-pointer"
+              >
+                Понятно, закрыть
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
