@@ -4,7 +4,7 @@ echo "================================================="
 echo "Running pre-push validation hook (verify-all.ps1)..."
 echo "================================================="
 
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "./verify-all.ps1"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Get-Content './verify-all.ps1' -Raw -Encoding UTF8 | Invoke-Expression"
 
 EXIT_CODE=$?
 
