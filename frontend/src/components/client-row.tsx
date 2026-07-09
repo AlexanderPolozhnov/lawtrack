@@ -186,6 +186,13 @@ export default function ClientRow({ client, isDemo = false, onRowClick }: Client
             ref={buttonRef}
             onClick={(e) => {
               e.stopPropagation();
+              if (!isOpen && buttonRef.current) {
+                const rect = buttonRef.current.getBoundingClientRect();
+                setCoords({
+                  top: rect.bottom + window.scrollY,
+                  left: rect.left + window.scrollX,
+                });
+              }
               setIsOpen(!isOpen);
             }}
             disabled={updateStatusMutation.isPending}
