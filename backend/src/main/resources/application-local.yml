@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:lawtrack}
+    username: ${DB_USER:lawtrack_user}
+    password: ${DB_PASSWORD:lawtrack_pass}
+  jpa:
+    show-sql: true
+  flyway:
+    enabled: true

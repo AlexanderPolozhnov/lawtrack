@@ -16,67 +16,67 @@ function Log-Summary($Text, $Color = "White") {
     $Text | Add-Content -Path $SummaryLog
 }
 
-# Очистка и старт лога
-"=== ВАЛИДАЦИЯ LAWTRACK CRM: $(Get-Date) ===" | Set-Content -Path $SummaryLog -Encoding utf8
+# Clear and start log
+"=== LAWTRACK CRM VALIDATION: $(Get-Date) ===" | Set-Content -Path $SummaryLog -Encoding utf8
 
-# --- 1. БЭКЕНД ---
-Log-Summary "`n[1/2] === БЭКЕНД (Java 21 / Spring Boot 4) ===" "Cyan"
+# --- 1. BACKEND ---
+Log-Summary "`n[1/2] === BACKEND (Java 21 / Spring Boot) ===" "Cyan"
 if (Test-Path backend) {
     Set-Location backend
-    Write-Host "Запуск компиляции и тестов Maven..." -ForegroundColor Gray
+    Write-Host "Running Maven compilation and tests..." -ForegroundColor Gray
     $output = ./mvnw.cmd clean test "-Dsurefire.failIfNoSpecifiedTests=false" --no-transfer-progress -q 2>&1
     $output | ForEach-Object { $_.ToString() } | Set-Content -Path $BackendLog -Encoding utf8
 
     if ($LASTEXITCODE -ne 0) {
-        Log-Summary "Тесты бэкенда ЗАВЕРШИЛИСЬ С ОШИБКОЙ. Проверьте лог: $BackendLog" "Red"
+        Log-Summary "Backend tests FAILED. Check log: $BackendLog" "Red"
         Get-Content $BackendLog -Tail 20 | Write-Host -ForegroundColor Yellow
         $Failed = $true
     } else {
-        Log-Summary "Бэкенд: УСПЕШНО" "Green"
+        Log-Summary "Backend: SUCCESS" "Green"
     }
     Set-Location $ProjectRoot
 } else {
-    Log-Summary "Бэкенд: папка backend/ отсутствует (пропускается)" "Yellow"
+    Log-Summary "Backend: backend/ directory is missing (skipped)" "Yellow"
 }
 
-# --- 2. ФРОНТЕНД ---
-Log-Summary "`n[2/2] === ФРОНТЕНД (Next.js 16 / TypeScript) ===" "Cyan"
+# --- 2. FRONTEND ---
+Log-Summary "`n[2/2] === FRONTEND (Next.js 16 / TypeScript) ===" "Cyan"
 if (Test-Path frontend) {
     Set-Location frontend
     $env:FORCE_COLOR = "0"
 
     try {
-        Write-Host "Установка зависимостей..." -ForegroundColor Gray
+        Write-Host "Installing dependencies..." -ForegroundColor Gray
         pnpm install --frozen-lockfile --ignore-scripts --silent 2>&1 | Out-Null
 
-        Write-Host "Запуск production-сборки Next.js..." -ForegroundColor Gray
+        Write-Host "Running Next.js production build..." -ForegroundColor Gray
         $fOutput = cmd /c "pnpm run build" 2>&1
         $fOutput | ForEach-Object { $_.ToString() } | Set-Content -Path $FrontendLog -Encoding utf8
 
         if ($LASTEXITCODE -ne 0) {
-            Log-Summary "Сборка фронтенда ЗАВЕРШИЛАСЬ С ОШИБКОЙ. Проверьте лог: $FrontendLog" "Red"
+            Log-Summary "Frontend build FAILED. Check log: $FrontendLog" "Red"
             Get-Content $FrontendLog -Tail 20 | Write-Host -ForegroundColor Yellow
             $Failed = $true
         } else {
-            Log-Summary "Фронтенд: УСПЕШНО" "Green"
+            Log-Summary "Frontend: SUCCESS" "Green"
         }
     } catch {
-        Log-Summary "Критическая ошибка фронтенда: $_" "Red"
+        Log-Summary "Critical frontend error: $_" "Red"
         $Failed = $true
     } finally {
         $env:FORCE_COLOR = ""
     }
     Set-Location $ProjectRoot
 } else {
-    Log-Summary "Фронтенд: папка frontend/ отсутствует (пропускается)" "Yellow"
+    Log-Summary "Frontend: frontend/ directory is missing (skipped)" "Yellow"
 }
 
-# --- ИТОГ ---
+# --- SUMMARY ---
 Log-Summary "`n========================================" "Cyan"
 if ($Failed) {
-    Log-Summary "ВАЛИДАЦИЯ ПРОВАЛЕНА." "Red"
+    Log-Summary "VALIDATION FAILED." "Red"
     exit 1
 } else {
-    Log-Summary "ВСЕ ПРОВЕРКИ ПРОЙДЕНЫ. Готово к пушу!" "Green"
+    Log-Summary "ALL CHECKS PASSED. Ready to push!" "Green"
     exit 0
 }

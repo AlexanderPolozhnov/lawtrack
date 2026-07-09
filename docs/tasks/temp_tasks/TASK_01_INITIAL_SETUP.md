@@ -95,34 +95,34 @@
 ## Порядок реализации для агента
 
 ### Infrastructure
-- [ ] 1. Создать `docker-compose.yml` в корне.
-- [ ] 2. Запустить `docker compose up -d postgres` для поднятия базы данных.
+- [x] 1. Создать `docker-compose.yml` в корне.
+- [x] 2. Запустить `docker compose up -d postgres` для поднятия базы данных.
 
 ### Backend
-- [ ] 3. Создать структуру каталогов бэкенда: `backend/src/main/java/com/lawtrack/` и `backend/src/main/resources/db/migration/`.
-- [ ] 4. Создать `backend/pom.xml`.
-- [ ] 5. Добавить Maven wrapper файлы (копированием или генерацией).
-- [ ] 6. Создать `com.lawtrack.LawtrackApplication.java`.
-- [ ] 7. Создать `backend/src/main/resources/application.yml` и настроить профили.
-- [ ] 8. Проверить сборку: `cd backend && .\mvnw.cmd clean compile -DskipTests`
+- [x] 3. Создать структуру каталогов бэкенда: `backend/src/main/java/com/lawtrack/` и `backend/src/main/resources/db/migration/`.
+- [x] 4. Создать `backend/pom.xml`.
+- [x] 5. Добавить Maven wrapper файлы (копированием или генерацией).
+- [x] 6. Создать `com.lawtrack.LawtrackApplication.java`.
+- [x] 7. Создать `backend/src/main/resources/application.yml` и настроить профили.
+- [x] 8. Проверить сборку: `cd backend && .\mvnw.cmd clean compile -DskipTests`
 
 ### Frontend
-- [ ] 9. Инициализировать `frontend/` через `npx -y create-next-app@16 frontend --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --use-pnpm`.
-- [ ] 10. Установить дополнительные зависимости (`@tanstack/react-query`, `zod`, `react-hook-form`, `@hookform/resolvers`, `lucide-react`, `clsx`, `tailwind-merge`).
-- [ ] 11. Очистить стартовый `page.tsx` и настроить `globals.css` с поддержкой Tailwind v4.
-- [ ] 12. Проверить сборку фронтенда: `cd frontend && pnpm run build`.
+- [x] 9. Инициализировать `frontend/` через `npx -y create-next-app@16 frontend --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --use-pnpm`.
+- [x] 10. Установить дополнительные зависимости (`@tanstack/react-query`, `zod`, `react-hook-form`, `@hookform/resolvers`, `lucide-react`, `clsx`, `tailwind-merge`).
+- [x] 11. Очистить стартовый `page.tsx` и настроить `globals.css` с поддержкой Tailwind v4.
+- [x] 12. Проверить сборку фронтенда: `cd frontend && pnpm run build`.
 
 ---
 
 ## ⚠️ Обязательный финальный чек-лист
 
 ОБЯЗАТЕЛЬНО перед завершением задачи:
-1. [ ] Выполни локальную валидацию `.\verify-all.ps1` в корне проекта. Если скрипт выдает ошибки — исправляй их!
-2. [ ] Синхронизируй `docs/CONTEXT_BACKUP.md` — добавь блок `## Update YYYY-MM-DD: [Суть]` в самый конец файла. Запись должна быть СТРОГО в UTF-8.
-3. [ ] Запусти `.\rotate-backup.ps1` для очистки старых логов.
-4. [ ] Синхронизируй `ROADMAP.md` — отметь выполненное `[x]` для Фазы 1.
-5. [ ] Перемести файл этой задачи из `docs/tasks/new_tasks/` в `docs/tasks/temp_tasks/`.
-6. [ ] Протестируй фичу руками и напиши гайд ниже.
+1. [x] Выполни локальную валидацию `.\verify-all.ps1` в корне проекта. Если скрипт выдает ошибки — исправляй их!
+2. [x] Синхронизируй `docs/CONTEXT_BACKUP.md` — добавь блок `## Update YYYY-MM-DD: [Суть]` в самый конец файла. Запись должна быть СТРОГО в UTF-8.
+3. [x] Запусти `.\rotate-backup.ps1` для очистки старых логов.
+4. [x] Синхронизируй `ROADMAP.md` — отметь выполненное `[x]` для Фазы 1.
+5. [x] Перемести файл этой задачи из `docs/tasks/new_tasks/` в `docs/tasks/temp_tasks/`.
+6. [x] Протестируй фичу руками и напиши гайд ниже.
 
 ---
 

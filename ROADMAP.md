@@ -14,12 +14,12 @@
 
 ## Фазы разработки
 
-### 🏗 Фаза 1 — Окружение и инфраструктура (Skeleton)
-*Статус: В планировании.*
-- [ ] Инициализация Maven-проекта бэкенда на Spring Boot 4, Java 21.
-- [ ] Инициализация Next.js 16 фронтенда с React 19, TypeScript и Tailwind CSS v4.
-- [ ] Настройка Docker Compose для PostgreSQL 16 локально.
-- [ ] Настройка конфигурации CORS, H2 (для легкого запуска) и Telegram Bot API.
+### ✅ Фаза 1 — Окружение и инфраструктура (Skeleton)
+*Статус: Выполнено.*
+- [x] Инициализация Maven-проекта бэкенда на Spring Boot 4, Java 21.
+- [x] Инициализация Next.js 16 фронтенда с React 19, TypeScript и Tailwind CSS v4.
+- [x] Настройка Docker Compose для PostgreSQL 16 локально.
+- [x] Настройка конфигурации CORS, H2 (для легкого запуска) и Telegram Bot API.
 
 ### 🗓 Фаза 2 — Backend API (Клиенты и Статистика)
 *Статус: Запланировано.*
