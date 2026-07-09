@@ -1,4 +1,4 @@
-import { Client, StatusCounts } from "./types";
+import { Client, ClientStatus, StatusCounts } from "./types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
@@ -37,3 +37,43 @@ export async function fetchStatusCounts(): Promise<StatusCounts> {
 
   return response.json();
 }
+
+export async function createClient(clientData: {
+  name: string;
+  phone: string;
+  caseDescription?: string;
+  deadline?: string;
+}): Promise<Client> {
+  const response = await fetch(`${API_BASE_URL}/api/clients`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(clientData),
+  });
+
+  if (!response.ok) {
+    const errData = await response.json().catch(() => ({}));
+    throw new Error(errData.message || `Failed to create client: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+export async function updateClientStatus(id: number, status: ClientStatus): Promise<Client> {
+  const response = await fetch(`${API_BASE_URL}/api/clients/${id}/status`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ status }),
+  });
+
+  if (!response.ok) {
+    const errData = await response.json().catch(() => ({}));
+    throw new Error(errData.message || `Failed to update status: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+

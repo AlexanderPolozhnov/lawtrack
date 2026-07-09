@@ -30,14 +30,14 @@
 - [x] REST API счетчиков (StatsController): группировка по статусам.
 - [x] Telegram Notification Service: асинхронные уведомления при добавлении клиентов и смене статусов.
 
-### 🏗  Фаза 3 — Frontend Дашборд (Интерфейс)
-*Статус: В активной разработке.*
+### ✅ Фаза 3 — Frontend Дашборд (Интерфейс)
+*Статус: Выполнено.*
 - [x] Базовая сетка приложения (Layout, Header с логотипом "LawTrack" и кнопкой добавления).
 - [x] API-клиент (`lib/api.ts`, `lib/types.ts`) и React Query провайдер.
 - [x] Компонент `StatsCards`: 3 карточки счетчиков по статусам с реактивным обновлением.
 - [x] Компонент `SearchFilterBar`: текстовый поиск и фильтр по статусу (влияет на счетчики по клику).
-- [ ] Компонент `ClientTable` + `ClientRow` с инлайн dropdown смены статуса (optimistic update через React Query).
-- [ ] Компонент `AddClientDialog`: модальное окно добавления клиента на `react-hook-form` + `zod` с валидацией.
+- [x] Компонент `ClientTable` + `ClientRow` с инлайн dropdown смены статуса (optimistic update через React Query).
+- [x] Компонент `AddClientDialog`: модальное окно добавления клиента на `react-hook-form` + `zod` с валидацией.
 
 ### 🗓 Фаза 4 — Бонусные фичи (P2 Nice-to-have)
 *Статус: Запланировано.*
