@@ -111,29 +111,29 @@ StatusCountResponse getStatusCounts();
 ## Порядок реализации для агента
 
 ### Backend
-- [ ] 1. Создать Flyway скрипт миграции `V1__init_schema.sql`.
-- [ ] 2. Создать Enum `ClientStatus` и Entity `Client`.
-- [ ] 3. Создать DTO классы (`CreateClientRequest`, `UpdateStatusRequest`, `ClientResponse`, `StatusCountResponse`).
-- [ ] 4. Создать `ClientNotFoundException` и `GlobalExceptionHandler`.
-- [ ] 5. Создать `ClientRepository` и прописать запросы.
-- [ ] 6. Создать `ClientMapper` (MapStruct).
-- [ ] 7. Создать `ClientService` с `@Transactional` методами для CRUD-операций и подсчета статистики.
-- [ ] 8. Создать `ClientController` (эндпоинты CRUD: GET `/api/clients`, POST `/api/clients`, PATCH `/api/clients/{id}/status`, GET `/api/clients/{id}`, DELETE `/api/clients/{id}`).
-- [ ] 9. Создать `StatsController` (GET `/api/stats/status-counts`).
-- [ ] 10. Написать интеграционный тест `ClientControllerTest` с использованием H2 или MockMvc.
-- [ ] 11. Запустить проверку компиляции и тестов: `.\mvnw.cmd clean test` (в папке `backend`).
+- [x] 1. Создать Flyway скрипт миграции `V1__init_schema.sql`.
+- [x] 2. Создать Enum `ClientStatus` и Entity `Client`.
+- [x] 3. Создать DTO классы (`CreateClientRequest`, `UpdateStatusRequest`, `ClientResponse`, `StatusCountResponse`).
+- [x] 4. Создать `ClientNotFoundException` и `GlobalExceptionHandler`.
+- [x] 5. Создать `ClientRepository` и прописать запросы.
+- [x] 6. Создать `ClientMapper` (MapStruct).
+- [x] 7. Создать `ClientService` с `@Transactional` методами для CRUD-операций и подсчета статистики.
+- [x] 8. Создать `ClientController` (эндпоинты CRUD: GET `/api/clients`, POST `/api/clients`, PATCH `/api/clients/{id}/status`, GET `/api/clients/{id}`, DELETE `/api/clients/{id}`).
+- [x] 9. Создать `StatsController` (GET `/api/stats/status-counts`).
+- [x] 10. Написать интеграционный тест `ClientControllerTest` с использованием H2 или MockMvc.
+- [x] 11. Запустить проверку компиляции и тестов: `.\mvnw.cmd clean test` (в папке `backend`).
 
 ---
 
 ## ⚠️ Обязательный финальный чек-лист
 
 ОБЯЗАТЕЛЬНО перед завершением задачи:
-1. [ ] Выполни локальную валидацию `.\verify-all.ps1` в корне проекта. Если скрипт выдает ошибки — исправляй их!
-2. [ ] Синхронизируй `docs/CONTEXT_BACKUP.md` — добавь блок `## Update YYYY-MM-DD: [Суть]` в самый конец файла. Запись должна быть СТРОГО в UTF-8.
-3. [ ] Запусти `.\rotate-backup.ps1` для очистки старых логов.
-4. [ ] Синхронизируй `ROADMAP.md` — отметь выполненное `[x]` для Фазы 2 (частично или полностью).
-5. [ ] Перемести файл этой задачи из `docs/tasks/new_tasks/` в `docs/tasks/temp_tasks/`.
-6. [ ] Протестируй фичу руками и напиши гайд ниже.
+1. [x] Выполни локальную валидацию `.\verify-all.ps1` в корне проекта. Если скрипт выдает ошибки — исправляй их!
+2. [x] Синхронизируй `docs/CONTEXT_BACKUP.md` — добавь блок `## Update YYYY-MM-DD: [Суть]` в самый конец файла. Запись должна быть СТРОГО в UTF-8.
+3. [x] Запусти `.\rotate-backup.ps1` для очистки старых логов.
+4. [x] Синхронизируй `ROADMAP.md` — отметь выполненное `[x]` для Фазы 2 (частично или полностью).
+5. [x] Перемести файл этой задачи из `docs/tasks/new_tasks/` в `docs/tasks/temp_tasks/`.
+6. [x] Протестируй фичу руками и напиши гайд ниже.
 
 ---
 

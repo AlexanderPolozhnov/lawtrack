@@ -21,13 +21,13 @@
 - [x] Настройка Docker Compose для PostgreSQL 16 локально.
 - [x] Настройка конфигурации CORS, H2 (для легкого запуска) и Telegram Bot API.
 
-### 🗓 Фаза 2 — Backend API (Клиенты и Статистика)
-*Статус: Запланировано.*
-- [ ] Схема базы данных Flyway: таблица `clients` и индексы.
-- [ ] JPA Entity `Client` и Enum `ClientStatus` (`NEW`, `IN_PROGRESS`, `CLOSED`).
-- [ ] Валидация Jakarta Bean Validation в DTO запросов.
-- [ ] REST API CRUD для клиентов (ClientController): список, создание, смена статуса, получение одного, удаление.
-- [ ] REST API счетчиков (StatsController): группировка по статусам.
+### 🏗 Фаза 2 — Backend API (Клиенты и Статистика)
+*Статус: В активной разработке.*
+- [x] Схема базы данных Flyway: таблица `clients` и индексы.
+- [x] JPA Entity `Client` и Enum `ClientStatus` (`NEW`, `IN_PROGRESS`, `CLOSED`).
+- [x] Валидация Jakarta Bean Validation в DTO запросов.
+- [x] REST API CRUD для клиентов (ClientController): список, создание, смена статуса, получение одного, удаление.
+- [x] REST API счетчиков (StatsController): группировка по статусам.
 - [ ] Telegram Notification Service: асинхронные уведомления при добавлении клиентов и смене статусов.
 
 ### 🗓 Фаза 3 — Frontend Дашборд (Интерфейс)
