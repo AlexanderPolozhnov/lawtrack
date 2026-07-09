@@ -184,3 +184,5 @@ js-scripts/
 scripts/
 
 .vercel
+docs/
+guides/

@@ -61,3 +61,22 @@
 5. **Тестирование и верификация**:
    - Написаны Unit-тесты для `TelegramNotificationService` в классе `TelegramNotificationServiceTest` с использованием `MockRestServiceServer` для симуляции Telegram API и проверки структуры отправляемых данных.
    - Успешно пройдена полная верификация проекта через `.\verify-all.ps1`.
+
+## Update 2026-07-09: Реализация базового фронтенда (TASK_04_FRONTEND_CORE)
+
+В рамках задачи `TASK_04_FRONTEND_CORE` были успешно выполнены следующие работы:
+1. **Конфигурация**: Создан файл `frontend/.env.local` с указанием адреса бэкенда (`NEXT_PUBLIC_API_URL`).
+2. **Типы и API**:
+   - Созданы TypeScript интерфейсы для клиентов (`Client`) и счетчиков статусов (`StatusCounts`) в `frontend/src/lib/types.ts`.
+   - Реализован API-клиент `frontend/src/lib/api.ts` с функциями `fetchClients` and `fetchStatusCounts`.
+3. **Состояние и Провайдеры**:
+   - Реализован провайдер React Query `frontend/src/lib/query-client-provider.tsx`.
+   - Настроен `frontend/src/app/layout.tsx` для поддержки шрифта Inter и обернут в провайдер React Query.
+4. **Дизайн-система**: Настроен файл `frontend/src/app/globals.css` для Tailwind CSS v4 с поддержкой LegalTech палитры и плавных переходов.
+5. **Компоненты**:
+   - Разработан интерактивный компонент счетчиков статусов `frontend/src/components/stats-cards.tsx` с поддержкой анимации при наведении и переключения фильтрации при клике.
+   - Разработан компонент поиска и фильтрации `frontend/src/components/search-filter-bar.tsx` с debounce-эффектом (250мс) для инпута поиска и выпадающим списком статусов.
+6. **Макет**:
+   - Обновлена главная страница `frontend/src/app/page.tsx` для интеграции компонентов и API через React Query.
+   - Реализован автоматический fallback режим (отображение локальных демо-данных с предупреждением), если бэкенд недоступен, что делает интерфейс устойчивым.
+7. **Тестирование**: Успешно пройдена полная верификация и сборка проекта с помощью `.\verify-all.ps1`.
