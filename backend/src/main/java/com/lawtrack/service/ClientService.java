@@ -17,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.lawtrack.util.HtmlSanitizer;
+
 import java.util.List;
 
 @Service
@@ -44,6 +46,8 @@ public class ClientService {
     @Transactional
     public ClientResponse createClient(CreateClientRequest request) {
         Client client = clientMapper.toEntity(request);
+        client.setName(HtmlSanitizer.sanitize(client.getName()));
+        client.setCaseDescription(HtmlSanitizer.sanitize(client.getCaseDescription()));
         client.setStatus(ClientStatus.NEW);
         Client saved = clientRepository.save(client);
 
@@ -95,10 +99,11 @@ public class ClientService {
     public ClientEventResponse addNote(Long clientId, String note) {
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new ClientNotFoundException("Client not found with id: " + clientId));
+        String sanitizedNote = HtmlSanitizer.sanitize(note);
         ClientEvent event = ClientEvent.builder()
                 .client(client)
                 .eventType(ClientEventType.NOTE_ADDED)
-                .description(note)
+                .description(sanitizedNote)
                 .build();
         ClientEvent saved = clientEventRepository.save(event);
         return clientEventMapper.toResponse(saved);

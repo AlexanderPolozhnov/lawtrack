@@ -34,3 +34,16 @@ telegram:
     token: ${TELEGRAM_BOT_TOKEN:}
   chat:
     id: ${TELEGRAM_CHAT_ID:}
+
+cors:
+  allowed-origins: ${FRONTEND_URL:http://localhost:3000}
+
+app:
+  admin-token: ${ADMIN_TOKEN:}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+

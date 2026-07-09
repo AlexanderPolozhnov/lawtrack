@@ -1,6 +1,21 @@
 import { Client, ClientStatus, StatusCounts, ClientEvent } from "./types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+const ADMIN_TOKEN = process.env.NEXT_PUBLIC_ADMIN_TOKEN;
+
+/**
+ * Returns standard headers including the optional X-Admin-Token if configured.
+ */
+const getHeaders = (extraHeaders?: Record<string, string>): Record<string, string> => {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...extraHeaders,
+  };
+  if (ADMIN_TOKEN) {
+    headers["X-Admin-Token"] = ADMIN_TOKEN;
+  }
+  return headers;
+};
 
 export async function fetchClients(params?: { status?: string; search?: string }): Promise<Client[]> {
   const url = new URL(`${API_BASE_URL}/api/clients`);
@@ -12,9 +27,7 @@ export async function fetchClients(params?: { status?: string; search?: string }
   }
 
   const response = await fetch(url.toString(), {
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: getHeaders(),
   });
 
   if (!response.ok) {
@@ -26,9 +39,7 @@ export async function fetchClients(params?: { status?: string; search?: string }
 
 export async function fetchStatusCounts(): Promise<StatusCounts> {
   const response = await fetch(`${API_BASE_URL}/api/stats/status-counts`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: getHeaders(),
   });
 
   if (!response.ok) {
@@ -46,9 +57,7 @@ export async function createClient(clientData: {
 }): Promise<Client> {
   const response = await fetch(`${API_BASE_URL}/api/clients`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: getHeaders(),
     body: JSON.stringify(clientData),
   });
 
@@ -63,9 +72,7 @@ export async function createClient(clientData: {
 export async function updateClientStatus(id: number, status: ClientStatus): Promise<Client> {
   const response = await fetch(`${API_BASE_URL}/api/clients/${id}/status`, {
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: getHeaders(),
     body: JSON.stringify({ status }),
   });
 
@@ -79,9 +86,7 @@ export async function updateClientStatus(id: number, status: ClientStatus): Prom
 
 export async function fetchEvents(id: number): Promise<ClientEvent[]> {
   const response = await fetch(`${API_BASE_URL}/api/clients/${id}/events`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: getHeaders(),
   });
 
   if (!response.ok) {
@@ -94,9 +99,7 @@ export async function fetchEvents(id: number): Promise<ClientEvent[]> {
 export async function addNote(id: number, note: string): Promise<ClientEvent> {
   const response = await fetch(`${API_BASE_URL}/api/clients/${id}/notes`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: getHeaders(),
     body: JSON.stringify({ note }),
   });
 
@@ -107,4 +110,3 @@ export async function addNote(id: number, note: string): Promise<ClientEvent> {
 
   return response.json();
 }
-
