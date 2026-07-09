@@ -1,0 +1,17 @@
+#!/bin/sh
+
+echo "================================================="
+echo "Running pre-push validation hook (verify-all.ps1)..."
+echo "================================================="
+
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "./verify-all.ps1"
+
+EXIT_CODE=$?
+
+if [ $EXIT_CODE -ne 0 ]; then
+    echo "❌ Validation failed! Push aborted."
+    exit 1
+fi
+
+echo "✅ All checks passed! Proceeding with push..."
+exit 0
