@@ -140,6 +140,8 @@ private-notes/
 docs/*
 !docs/tasks/
 !docs/tasks/**
+!docs/assets/
+!docs/assets/**
 !docs/FRONTEND_BACKEND_CONTRACT.md
 !docs/CONTEXT_BACKUP.md
 !docs/CONTEXT_BACKUP_ARCHIVE.md
