@@ -1,8 +1,10 @@
 package com.lawtrack.controller;
 
 import com.lawtrack.dto.request.CreateClientRequest;
+import com.lawtrack.dto.request.CreateNoteRequest;
 import com.lawtrack.dto.request.UpdateStatusRequest;
 import com.lawtrack.dto.response.ClientResponse;
+import com.lawtrack.dto.response.ClientEventResponse;
 import com.lawtrack.entity.ClientStatus;
 import com.lawtrack.service.ClientService;
 import jakarta.validation.Valid;
@@ -52,5 +54,19 @@ public class ClientController {
     public ResponseEntity<Void> deleteClient(@PathVariable("id") Long id) {
         clientService.deleteClient(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/events")
+    public ResponseEntity<List<ClientEventResponse>> getEvents(@PathVariable("id") Long id) {
+        List<ClientEventResponse> events = clientService.getEvents(id);
+        return ResponseEntity.ok(events);
+    }
+
+    @PostMapping("/{id}/notes")
+    public ResponseEntity<ClientEventResponse> addNote(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody CreateNoteRequest request) {
+        ClientEventResponse noteEvent = clientService.addNote(id, request.getNote());
+        return ResponseEntity.status(HttpStatus.CREATED).body(noteEvent);
     }
 }

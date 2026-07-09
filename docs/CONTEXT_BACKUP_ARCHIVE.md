@@ -1,1 +1,18 @@
-﻿
+﻿## Update 2026-07-09: Инициализация проектов LawTrack CRM
+
+В рамках задачи `TASK_01_INITIAL_SETUP` были успешно выполнены следующие работы:
+1. **Инфраструктура**: Создан файл `docker-compose.yml` в корне проекта с сервисами `postgres:16-alpine` и `backend`. Успешно запущен контейнер PostgreSQL локально.
+2. **Бэкенд**:
+   - Создан `backend/pom.xml` с необходимыми зависимостями (Spring Boot 3.4.0, JPA, Validation, Actuator, Flyway, MapStruct, Lombok, Postgres, H2, Swagger).
+   - Сгенерирован Maven wrapper в папке `backend`.
+   - Создан класс `com.lawtrack.LawtrackApplication` в качестве точки входа бэкенда.
+   - Сконфигурированы файлы `application.yml` и `application-local.yml` для поддержки профиля `local` и подключения к PostgreSQL.
+   - Успешно пройдена компиляция и тесты бэкенда через `./mvnw.cmd clean test`.
+3. **Фронтенд**:
+   - Инициализировано приложение Next.js 16 (React 19, TypeScript, ESLint, App Router, src-dir) с использованием pnpm.
+   - Установлены зависимости: `@tanstack/react-query`, `zod`, `react-hook-form`, `@hookform/resolvers`, `lucide-react`, `clsx`, `tailwind-merge`.
+   - Настроен Tailwind CSS v4 с поддержкой шрифта `Inter` в `globals.css` и `layout.tsx`.
+   - Создана стартовая страница с премиальным дизайном дашборда юриста в `page.tsx`.
+   - Успешно выполнена production-сборка фронтенда через `pnpm run build`.
+4. **Валидация**: Переведены логи в `verify-all.ps1` на английский язык для исключения parser error в PowerShell на русскоязычных Windows, скрипт успешно прошел все тесты и сборки.
+

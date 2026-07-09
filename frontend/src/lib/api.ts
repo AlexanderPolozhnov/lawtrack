@@ -1,4 +1,4 @@
-import { Client, ClientStatus, StatusCounts } from "./types";
+import { Client, ClientStatus, StatusCounts, ClientEvent } from "./types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
@@ -72,6 +72,37 @@ export async function updateClientStatus(id: number, status: ClientStatus): Prom
   if (!response.ok) {
     const errData = await response.json().catch(() => ({}));
     throw new Error(errData.message || `Failed to update status: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+export async function fetchEvents(id: number): Promise<ClientEvent[]> {
+  const response = await fetch(`${API_BASE_URL}/api/clients/${id}/events`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch events: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+export async function addNote(id: number, note: string): Promise<ClientEvent> {
+  const response = await fetch(`${API_BASE_URL}/api/clients/${id}/notes`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ note }),
+  });
+
+  if (!response.ok) {
+    const errData = await response.json().catch(() => ({}));
+    throw new Error(errData.message || `Failed to add note: ${response.statusText}`);
   }
 
   return response.json();

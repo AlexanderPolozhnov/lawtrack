@@ -8,6 +8,8 @@ import StatsCards from "@/components/stats-cards";
 import SearchFilterBar from "@/components/search-filter-bar";
 import ClientTable from "@/components/client-table";
 import AddClientDialog from "@/components/add-client-dialog";
+import ClientDetailsDrawer from "@/components/client-details-drawer";
+import ThemeToggle from "@/components/theme-toggle";
 import { useClients } from "@/hooks/use-clients";
 import { AlertCircle, Plus } from "lucide-react";
 
@@ -55,6 +57,8 @@ export default function Home() {
   const [statusFilter, setStatusFilter] = useState<ClientStatus | "ALL">("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const {
     data: statusCounts,
@@ -89,27 +93,27 @@ export default function Home() {
   const displayCounts = isApiError ? mockCounts : statusCounts;
 
   return (
-    <div className="min-h-screen bg-[#fafafa] flex flex-col">
+    <div className="min-h-screen bg-background text-foreground flex flex-col transition-colors duration-200">
       {/* Header */}
-      <header className="border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-10">
+      <header className="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-indigo-200">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-indigo-200 dark:shadow-none">
               L
             </div>
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-slate-900">LawTrack</h1>
-              <p className="text-xs text-slate-500">Система управления делами</p>
+              <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">LawTrack</h1>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Система управления делами</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
             {isApiError ? (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-950/50">
                 <span className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-pulse" />
                 API Недоступно (Демо)
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-950/50">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 API Активно
               </span>
@@ -123,12 +127,14 @@ export default function Home() {
               <span className="hidden sm:inline">Добавить</span>
             </button>
 
-            <div className="h-8 w-px bg-slate-200" />
+            <ThemeToggle />
+
+            <div className="h-8 w-px bg-slate-200 dark:bg-slate-800" />
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-semibold text-sm">
+              <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-950/50 flex items-center justify-center text-indigo-700 dark:text-indigo-400 font-semibold text-sm">
                 АП
               </div>
-              <span className="text-sm font-medium text-slate-700 hidden md:inline">Александр П.</span>
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-300 hidden md:inline">Александр П.</span>
             </div>
           </div>
         </div>
@@ -138,8 +144,8 @@ export default function Home() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8">
         {/* Welcome Section */}
         <div className="flex flex-col gap-2">
-          <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Рабочее пространство</h2>
-          <p className="text-slate-500 max-w-2xl text-sm sm:text-base">
+          <h2 className="text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">Рабочее пространство</h2>
+          <p className="text-slate-500 dark:text-slate-400 max-w-2xl text-sm sm:text-base">
             Добро пожаловать в LawTrack CRM. Здесь собраны все ваши клиенты, текущие дела и статистика эффективности.
           </p>
         </div>
@@ -161,8 +167,8 @@ export default function Home() {
 
         {/* API Error Warning */}
         {isApiError && (
-          <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 flex gap-3 text-amber-800 text-sm">
-            <AlertCircle className="w-5 h-5 shrink-0 text-amber-600" />
+          <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/50 flex gap-3 text-amber-800 dark:text-amber-300 text-sm">
+            <AlertCircle className="w-5 h-5 shrink-0 text-amber-600 dark:text-amber-500" />
             <div>
               <span className="font-semibold">Внимание:</span> Бэкенд не отвечает. Отображаются демонстрационные локальные данные. Убедитесь, что сервер Spring Boot запущен на порту 8080.
             </div>
@@ -170,11 +176,11 @@ export default function Home() {
         )}
 
         {/* Clients Table Box */}
-        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
-          <div className="p-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="bg-white dark:bg-card border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+          <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h3 className="text-lg font-bold text-slate-900">Список клиентов</h3>
-              <p className="text-sm text-slate-500">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">Список клиентов</h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 {statusFilter === "ALL"
                   ? "Все зарегистрированные клиенты"
                   : `Клиенты в статусе "${
@@ -188,7 +194,7 @@ export default function Home() {
             </div>
             <button
               onClick={() => setIsAddDialogOpen(true)}
-              className="self-start sm:self-auto inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold text-sm px-4 py-2.5 rounded-xl shadow-md shadow-indigo-100 hover:shadow-lg transition-all duration-200 cursor-pointer"
+              className="self-start sm:self-auto inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold text-sm px-4 py-2.5 rounded-xl shadow-md shadow-indigo-100 dark:shadow-none hover:shadow-lg transition-all duration-200 cursor-pointer"
             >
               <Plus className="w-4 h-4" /> Добавить клиента
             </button>
@@ -198,13 +204,17 @@ export default function Home() {
             clients={displayClients}
             isLoading={isApiLoading && !isApiError}
             isDemo={isApiError}
+            onRowClick={(id) => {
+              setSelectedClientId(id);
+              setIsDrawerOpen(true);
+            }}
           />
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="mt-auto border-t border-slate-200 bg-white py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-400">
+      <footer className="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-card py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-400 dark:text-slate-500">
           &copy; {new Date().getFullYear()} LawTrack CRM. Все права защищены.
         </div>
       </footer>
@@ -213,6 +223,14 @@ export default function Home() {
       <AddClientDialog
         isOpen={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
+      />
+
+      {/* Client Details Drawer */}
+      <ClientDetailsDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        clientId={selectedClientId}
+        clients={displayClients}
       />
     </div>
   );

@@ -96,21 +96,21 @@ export default function AddClientDialog({ isOpen, onClose }: AddClientDialogProp
       />
 
       {/* Dialog Content */}
-      <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-lg overflow-hidden relative z-10 transform transition-all duration-300 scale-95 animate-scale-up">
+      <div className="bg-white dark:bg-card rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 w-full max-w-lg overflow-hidden relative z-10 transform transition-all duration-300 scale-95 animate-scale-up">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-slate-50 to-white">
+        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-gradient-to-r from-slate-50 to-white dark:from-slate-900 dark:to-card">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
+            <div className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-slate-900">Новый клиент</h3>
-              <p className="text-xs text-slate-500">Добавление нового дела в CRM</p>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">Новый client</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Добавление нового дела в CRM</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-1.5 rounded-lg transition-colors cursor-pointer"
+            className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 p-1.5 rounded-lg transition-colors cursor-pointer"
             aria-label="Закрыть"
           >
             <X className="w-5 h-5" />
@@ -120,22 +120,22 @@ export default function AddClientDialog({ isOpen, onClose }: AddClientDialogProp
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="p-6 flex flex-col gap-5">
           {errorMsg && (
-            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-100 text-rose-800 text-sm font-medium">
+            <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/50 text-rose-800 dark:text-rose-300 text-sm font-medium">
               {errorMsg}
             </div>
           )}
 
           {/* Name Field */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
+            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
               ФИО Клиента <span className="text-rose-500">*</span>
             </label>
             <input
               type="text"
               placeholder="Иванов Иван Иванович"
               {...register("name")}
-              className={`block w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
-                errors.name ? "border-rose-300 bg-rose-50/10 focus:ring-rose-500 focus:border-rose-500" : "border-slate-200"
+              className={`block w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border rounded-xl text-sm text-foreground placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-all duration-200 ${
+                errors.name ? "border-rose-300 bg-rose-50/10 focus:ring-rose-500 focus:border-rose-500" : "border-slate-200 dark:border-slate-800"
               }`}
             />
             {errors.name && (
@@ -145,15 +145,15 @@ export default function AddClientDialog({ isOpen, onClose }: AddClientDialogProp
 
           {/* Phone Field */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
+            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
               Номер телефона <span className="text-rose-500">*</span>
             </label>
             <input
               type="text"
               placeholder="+7 (999) 111-22-33"
               {...register("phone")}
-              className={`block w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
-                errors.phone ? "border-rose-300 bg-rose-50/10 focus:ring-rose-500 focus:border-rose-500" : "border-slate-200"
+              className={`block w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border rounded-xl text-sm text-foreground placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-all duration-200 ${
+                errors.phone ? "border-rose-300 bg-rose-50/10 focus:ring-rose-500 focus:border-rose-500" : "border-slate-200 dark:border-slate-800"
               }`}
             />
             {errors.phone && (
@@ -163,42 +163,42 @@ export default function AddClientDialog({ isOpen, onClose }: AddClientDialogProp
 
           {/* Deadline Field */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
+            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
               Срок решения (Дедлайн)
             </label>
             <input
               type="date"
               {...register("deadline")}
-              className="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 text-slate-700 cursor-pointer"
+              className="block w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-all duration-200 text-foreground cursor-pointer"
             />
           </div>
 
           {/* Case Description Field */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
+            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
               Суть дела / Описание
             </label>
             <textarea
               rows={3}
               placeholder="Опишите детали дела, ключевые требования или суть спора..."
               {...register("caseDescription")}
-              className="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 resize-none"
+              className="block w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm text-foreground placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-all duration-200 resize-none"
             />
           </div>
 
           {/* Footer Actions */}
-          <div className="flex justify-end gap-3 mt-2 pt-4 border-t border-slate-100">
+          <div className="flex justify-end gap-3 mt-2 pt-4 border-t border-slate-100 dark:border-slate-800">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+              className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 bg-white dark:bg-slate-900 transition-colors cursor-pointer"
             >
               Отмена
             </button>
             <button
               type="submit"
               disabled={createClientMutation.isPending}
-              className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 disabled:bg-indigo-400 text-white font-semibold text-sm rounded-xl shadow-md shadow-indigo-100 hover:shadow-lg transition-all duration-200 flex items-center gap-2 cursor-pointer"
+              className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 disabled:bg-indigo-400 text-white font-semibold text-sm rounded-xl shadow-md shadow-indigo-100 dark:shadow-none hover:shadow-lg transition-all duration-200 flex items-center gap-2 cursor-pointer"
             >
               {createClientMutation.isPending ? (
                 <>

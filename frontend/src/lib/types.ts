@@ -17,3 +17,13 @@ export interface StatusCounts {
   closedCount: number;
   total: number;
 }
+
+export type ClientEventType = "CREATED" | "STATUS_CHANGED" | "NOTE_ADDED";
+
+export interface ClientEvent {
+  id: number;
+  clientId: number;
+  eventType: ClientEventType;
+  description: string;
+  createdAt: string;
+}
