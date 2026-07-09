@@ -21,6 +21,7 @@ public class ClientService {
 
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
+    private final TelegramNotificationService telegramNotificationService;
 
     public List<ClientResponse> getClients(ClientStatus status, String search) {
         List<Client> clients = clientRepository.findAllByFilter(status, search);
@@ -38,6 +39,7 @@ public class ClientService {
         Client client = clientMapper.toEntity(request);
         client.setStatus(ClientStatus.NEW);
         Client saved = clientRepository.save(client);
+        telegramNotificationService.notifyNewClient(saved);
         return clientMapper.toResponse(saved);
     }
 
@@ -45,9 +47,14 @@ public class ClientService {
     public ClientResponse updateStatus(Long id, ClientStatus status) {
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new ClientNotFoundException("Client not found with id: " + id));
-        client.setStatus(status);
-        Client updated = clientRepository.save(client);
-        return clientMapper.toResponse(updated);
+        ClientStatus oldStatus = client.getStatus();
+        if (oldStatus != status) {
+            client.setStatus(status);
+            Client updated = clientRepository.save(client);
+            telegramNotificationService.notifyStatusChanged(updated, oldStatus);
+            return clientMapper.toResponse(updated);
+        }
+        return clientMapper.toResponse(client);
     }
 
     @Transactional
@@ -61,3 +68,4 @@ public class ClientService {
         return clientRepository.getStatusCounts();
     }
 }
+

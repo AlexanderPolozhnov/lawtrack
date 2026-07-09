@@ -28,7 +28,7 @@
 - [x] Валидация Jakarta Bean Validation в DTO запросов.
 - [x] REST API CRUD для клиентов (ClientController): список, создание, смена статуса, получение одного, удаление.
 - [x] REST API счетчиков (StatsController): группировка по статусам.
-- [ ] Telegram Notification Service: асинхронные уведомления при добавлении клиентов и смене статусов.
+- [x] Telegram Notification Service: асинхронные уведомления при добавлении клиентов и смене статусов.
 
 ### 🗓 Фаза 3 — Frontend Дашборд (Интерфейс)
 *Статус: Запланировано.*

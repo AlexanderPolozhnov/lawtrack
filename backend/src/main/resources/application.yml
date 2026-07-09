@@ -32,4 +32,5 @@ springdoc:
 telegram:
   bot:
     token: ${TELEGRAM_BOT_TOKEN:}
-    chat-id: ${TELEGRAM_CHAT_ID:}
+  chat:
+    id: ${TELEGRAM_CHAT_ID:}

@@ -76,9 +76,9 @@ public class RestTemplateConfig {
 ## Порядок реализации для агента
 
 ### Backend
-- [ ] 1. Добавить `@EnableAsync` в `LawtrackApplication.java`.
-- [ ] 2. Добавить `RestTemplateConfig.java` с объявлением бина `RestTemplate`.
-- [ ] 3. Обновить `application.yml`, добавив структуру:
+- [x] 1. Добавить `@EnableAsync` в `LawtrackApplication.java`.
+- [x] 2. Добавить `RestTemplateConfig.java` с объявлением бина `RestTemplate`.
+- [x] 3. Обновить `application.yml`, добавив структуру:
   ```yaml
   telegram:
     bot:
@@ -86,22 +86,22 @@ public class RestTemplateConfig {
     chat:
       id: ${TELEGRAM_CHAT_ID:}
   ```
-- [ ] 4. Создать `TelegramNotificationService.java` с аннотацией `@Service`, инжектированием `@Value` токена и чата, а также `@Async` методами `notifyNewClient` и `notifyStatusChanged`.
-- [ ] 5. Изменить `ClientService.java`: внедрить `TelegramNotificationService` и вызвать `notifyNewClient` после сохранения нового клиента, а также `notifyStatusChanged` при успешном изменении статуса.
-- [ ] 6. Написать Unit-тест для `TelegramNotificationService` с использованием MockRestServiceServer для симуляции Telegram API.
-- [ ] 7. Проверить сборку бэкенда: `cd backend && .\mvnw.cmd clean test`.
+- [x] 4. Создать `TelegramNotificationService.java` с аннотацией `@Service`, инжектированием `@Value` токена и чата, а также `@Async` методами `notifyNewClient` и `notifyStatusChanged`.
+- [x] 5. Изменить `ClientService.java`: внедрить `TelegramNotificationService` и вызвать `notifyNewClient` после сохранения нового клиента, а также `notifyStatusChanged` при успешном изменении статуса.
+- [x] 6. Написать Unit-тест для `TelegramNotificationService` с использованием MockRestServiceServer для симуляции Telegram API.
+- [x] 7. Проверить сборку бэкенда: `cd backend && .\mvnw.cmd clean test`.
 
 ---
 
 ## ⚠️ Обязательный финальный чек-лист
 
 ОБЯЗАТЕЛЬНО перед завершением задачи:
-1. [ ] Выполни локальную валидацию `.\verify-all.ps1` в корне проекта. Если скрипт выдает ошибки — исправляй их!
-2. [ ] Синхронизируй `docs/CONTEXT_BACKUP.md` — добавь блок `## Update YYYY-MM-DD: [Суть]` в самый конец файла. Запись должна быть СТРОГО в UTF-8.
-3. [ ] Запусти `.\rotate-backup.ps1` для очистки старых логов.
-4. [ ] Синхронизируй `ROADMAP.md` — отметь выполненное `[x]` для Telegram-уведомлений.
-5. [ ] Перемести файл этой задачи из `docs/tasks/new_tasks/` в `docs/tasks/temp_tasks/`.
-6. [ ] Протестируй фичу руками и напиши гайд ниже.
+1. [x] Выполни локальную валидацию `.\verify-all.ps1` in корне проекта. Если скрипт выдает ошибки — исправляй их!
+2. [x] Синхронизируй `docs/CONTEXT_BACKUP.md` — добавь блок `## Update YYYY-MM-DD: [Суть]` в самый конец файла. Запись должна быть СТРОГО в UTF-8.
+3. [x] Запусти `.\rotate-backup.ps1` для очистки старых логов.
+4. [x] Синхронизируй `ROADMAP.md` — отметь выполненное `[x]` для Telegram-уведомлений.
+5. [x] Перемести файл этой задачи из `docs/tasks/new_tasks/` в `docs/tasks/temp_tasks/`.
+6. [x] Протестируй фичу руками и напиши гайд ниже.
 
 ---
 
