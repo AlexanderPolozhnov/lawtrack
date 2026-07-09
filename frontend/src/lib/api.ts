@@ -110,3 +110,15 @@ export async function addNote(id: number, note: string): Promise<ClientEvent> {
 
   return response.json();
 }
+
+export async function deleteClient(id: number): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/api/clients/${id}`, {
+    method: "DELETE",
+    headers: getHeaders(),
+  });
+
+  if (!response.ok) {
+    const errData = await response.json().catch(() => ({}));
+    throw new Error(errData.message || `Failed to delete client: ${response.statusText}`);
+  }
+}

@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lawtrack.dto.response.StatusCountResponse;
 import com.lawtrack.entity.Client;
 import com.lawtrack.entity.ClientStatus;
+import com.lawtrack.entity.TelegramChat;
 import com.lawtrack.repository.ClientRepository;
+import com.lawtrack.repository.TelegramChatRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -13,6 +15,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -22,20 +25,23 @@ public class TelegramNotificationService {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private final ClientRepository clientRepository;
+    private final TelegramChatRepository telegramChatRepository;
 
     @Value("${telegram.bot.token:}")
     private String botToken;
 
-    private String chatId;
+    private final String defaultChatId;
     private long lastUpdateId = 0;
 
     public TelegramNotificationService(RestTemplate restTemplate, ObjectMapper objectMapper,
                                        ClientRepository clientRepository,
+                                       TelegramChatRepository telegramChatRepository,
                                        @Value("${telegram.chat.id:}") String chatId) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
         this.clientRepository = clientRepository;
-        this.chatId = chatId;
+        this.telegramChatRepository = telegramChatRepository;
+        this.defaultChatId = chatId;
     }
 
     @Scheduled(fixedRate = 5000)
@@ -69,30 +75,31 @@ public class TelegramNotificationService {
 
                     long cid = message.path("chat").path("id").asLong();
                     String text = message.path("text").asText();
+                    String cidStr = String.valueOf(cid);
 
-                    // If Chat ID is not configured yet, dynamically bind it to the first active user chat!
-                    if (chatId == null || chatId.isBlank()) {
-                        log.info("Telegram: Auto-detected Chat ID: {}", cid);
-                        this.chatId = String.valueOf(cid);
+                    // Dynamically save registered chat ID to database
+                    if (!telegramChatRepository.existsById(cidStr)) {
+                        telegramChatRepository.save(TelegramChat.builder().chatId(cidStr).build());
+                        log.info("Telegram: Registered new chat ID: {}", cidStr);
                     }
 
                     if (text != null) {
                         String cleanText = text.trim();
                         if (cleanText.startsWith("/start")) {
-                            sendDirectMessage(String.valueOf(cid), 
+                            sendDirectMessage(cidStr, 
                                 "👋 *Привет! Добро пожаловать в LawTrack CRM!*\n\n" +
-                                "Этот бот предназначен для мгновенного информирования о новых заявках клиентов и изменении их статусов.\n\n" +
-                                "📍 Ваш Chat ID успешно зарегистрирован: `" + cid + "`\n\n" +
-                                "Используйте команду /help для просмотра доступных опций.");
+                                "Вы успешно подключили уведомления! Бот будет присылать вам информацию о новых клиентах и движении по делам.\n\n" +
+                                "📍 Ваш Chat ID зарегистрирован в системе.\n\n" +
+                                "Используйте /help для списка команд.");
                         } else if (cleanText.startsWith("/help")) {
-                            sendDirectMessage(String.valueOf(cid), 
+                            sendDirectMessage(cidStr, 
                                 "📖 *Доступные команды CRM LawTrack:*\n\n" +
-                                "• /start — Проверить статус подключения бота\n" +
+                                "• /start — Проверить статус подключения\n" +
                                 "• /status — Показать сводную статистику по делам\n" +
                                 "• /help — Показать этот список команд");
                         } else if (cleanText.startsWith("/status")) {
                             StatusCountResponse stats = clientRepository.getStatusCounts();
-                            sendDirectMessage(String.valueOf(cid), 
+                            sendDirectMessage(cidStr, 
                                 "📊 *Сводка дел LawTrack CRM:*\n\n" +
                                 "• Всего дел: *" + stats.getTotal() + "*\n" +
                                 "• Новые заявки: *" + stats.getNewCount() + "*\n" +
@@ -118,12 +125,17 @@ public class TelegramNotificationService {
         String name = escapeMarkdown(client.getName());
         String phone = escapeMarkdown(client.getPhone());
         String status = escapeMarkdown(client.getStatus().getDisplayName());
+        String caseDesc = client.getCaseDescription() != null ? escapeMarkdown(client.getCaseDescription()) : "—";
+
         String text = String.format(
             "🆕 *Новый клиент добавлен*\n\n" +
-            "👤 %s\n📞 %s\n📋 Статус: %s",
-            name, phone, status
+            "👤 *ФИО:* %s\n" +
+            "📞 *Телефон:* %s\n" +
+            "📝 *Суть дела:* %s\n" +
+            "📋 *Начальный статус:* %s",
+            name, phone, caseDesc, status
         );
-        sendMessage(text);
+        sendMessageToAll(text);
     }
 
     @Async
@@ -131,19 +143,35 @@ public class TelegramNotificationService {
         String name = escapeMarkdown(client.getName());
         String oldStatusStr = escapeMarkdown(oldStatus.getDisplayName());
         String newStatusStr = escapeMarkdown(client.getStatus().getDisplayName());
+        String caseDesc = client.getCaseDescription() != null ? escapeMarkdown(client.getCaseDescription()) : "—";
+
         String text = String.format(
-            "🔄 *Статус изменён*\n\n👤 %s\n%s → %s",
-            name, oldStatusStr, newStatusStr
+            "🔄 *Статус изменён*\n\n" +
+            "👤 *Клиент:* %s\n" +
+            "📝 *Суть дела:* %s\n" +
+            "📈 *Движение по делу:* %s → %s",
+            name, caseDesc, oldStatusStr, newStatusStr
         );
-        sendMessage(text);
+        sendMessageToAll(text);
     }
 
-    private void sendMessage(String text) {
-        if (chatId == null || chatId.isBlank()) {
-            log.info("Telegram notification skipped: Chat ID is not yet resolved. Send a message to the bot first.");
+    private void sendMessageToAll(String text) {
+        // Automatically ensure the default chat ID from properties is registered
+        if (defaultChatId != null && !defaultChatId.isBlank()) {
+            if (!telegramChatRepository.existsById(defaultChatId)) {
+                telegramChatRepository.save(TelegramChat.builder().chatId(defaultChatId).build());
+            }
+        }
+
+        List<TelegramChat> chats = telegramChatRepository.findAll();
+        if (chats.isEmpty()) {
+            log.info("Telegram notification skipped: No chat IDs registered yet.");
             return;
         }
-        sendDirectMessage(chatId, text);
+
+        for (TelegramChat chat : chats) {
+            sendDirectMessage(chat.getChatId(), text);
+        }
     }
 
     private void sendDirectMessage(String targetChatId, String text) {
@@ -160,7 +188,7 @@ public class TelegramNotificationService {
             restTemplate.postForEntity(url, body, String.class);
             log.info("Telegram notification sent successfully to chat ID: {}", targetChatId);
         } catch (Exception e) {
-            log.warn("Не удалось отправить Telegram-уведомление: {}", e.getMessage());
+            log.warn("Не удалось отправить Telegram-уведомление к {}: {}", targetChatId, e.getMessage());
         }
     }
 

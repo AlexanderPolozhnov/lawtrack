@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { X, Calendar, Phone, User, Briefcase, Plus, AlertCircle, Clock, CheckCircle2, MessageSquare, Loader2 } from "lucide-react";
+import { X, Calendar, Phone, User, Briefcase, Plus, AlertCircle, Clock, CheckCircle2, MessageSquare, Loader2, Trash2 } from "lucide-react";
 import { Client, ClientStatus } from "@/lib/types";
 import { useEvents, useAddNote } from "@/hooks/use-events";
 import { useUpdateStatus } from "@/hooks/use-update-status";
+import { useDeleteClient } from "@/hooks/use-delete-client";
 
 interface ClientDetailsDrawerProps {
   isOpen: boolean;
@@ -17,7 +18,22 @@ export default function ClientDetailsDrawer({ isOpen, onClose, clientId, clients
   const [noteText, setNoteText] = useState("");
   const updateStatusMutation = useUpdateStatus();
   const addNoteMutation = useAddNote();
+  const deleteClientMutation = useDeleteClient();
   const drawerRef = useRef<HTMLDivElement>(null);
+
+  const handleDelete = () => {
+    if (!client) return;
+    if (window.confirm(`Вы действительно хотите удалить клиента "${client.name}"?`)) {
+      deleteClientMutation.mutate(client.id, {
+        onSuccess: () => {
+          onClose();
+        },
+        onError: (err: any) => {
+          alert(`Ошибка удаления клиента: ${err.message || "Неизвестная ошибка"}`);
+        },
+      });
+    }
+  };
 
   const client = clients.find((c) => c.id === clientId) || null;
 
@@ -119,12 +135,26 @@ export default function ClientDetailsDrawer({ isOpen, onClose, clientId, clients
               {client.name}
             </h2>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 cursor-pointer"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={handleDelete}
+              disabled={deleteClientMutation.isPending}
+              className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-all duration-200 cursor-pointer"
+              title="Удалить карточку"
+            >
+              {deleteClientMutation.isPending ? (
+                <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
+              ) : (
+                <Trash2 className="w-5 h-5" />
+              )}
+            </button>
+            <button
+              onClick={onClose}
+              className="p-2 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Content */}

@@ -24,6 +24,7 @@ export default function ClientTable({ clients, isLoading, isDemo = false, onRowC
               <th className="p-4 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Суть дела</th>
               <th className="p-4 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Дедлайн</th>
               <th className="p-4 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Статус</th>
+              <th className="p-4 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider text-right">Действия</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -34,6 +35,7 @@ export default function ClientTable({ clients, isLoading, isDemo = false, onRowC
                 <td className="p-4 py-5"><div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-md w-48" /></td>
                 <td className="p-4 py-5"><div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-md w-20" /></td>
                 <td className="p-4 py-5"><div className="h-6 bg-slate-200 dark:bg-slate-800 rounded-full w-24" /></td>
+                <td className="p-4 py-5"><div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-md w-8 ml-auto" /></td>
               </tr>
             ))}
           </tbody>
@@ -68,6 +70,7 @@ export default function ClientTable({ clients, isLoading, isDemo = false, onRowC
             <th className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Суть дела</th>
             <th className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Дедлайн</th>
             <th className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Статус</th>
+            <th className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Действия</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-card">

@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Client, ClientStatus } from "@/lib/types";
 import { useUpdateStatus } from "@/hooks/use-update-status";
-import { ChevronDown, Loader2, AlertCircle } from "lucide-react";
+import { useDeleteClient } from "@/hooks/use-delete-client";
+import { ChevronDown, Loader2, AlertCircle, Trash2 } from "lucide-react";
 
 interface ClientRowProps {
   client: Client;
@@ -13,19 +15,57 @@ interface ClientRowProps {
 
 export default function ClientRow({ client, isDemo = false, onRowClick }: ClientRowProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [coords, setCoords] = useState({ top: 0, left: 0 });
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const updateStatusMutation = useUpdateStatus();
+  const deleteClientMutation = useDeleteClient();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+      // If clicking inside the portal dropdown, do not close it immediately
+      if (dropdownRef.current && dropdownRef.current.contains(event.target as Node)) {
+        return;
       }
+      if (buttonRef.current && buttonRef.current.contains(event.target as Node)) {
+        return;
+      }
+      setIsOpen(false);
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+
+    const handleScrollOrResize = () => {
+      setIsOpen(false);
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      window.addEventListener("scroll", handleScrollOrResize, true);
+      window.addEventListener("resize", handleScrollOrResize);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("scroll", handleScrollOrResize, true);
+      window.removeEventListener("resize", handleScrollOrResize);
+    };
+  }, [isOpen]);
+
+  // Recalculate button coordinates when dropdown opens
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setCoords({
+        top: rect.bottom + window.scrollY,
+        left: rect.left + window.scrollX,
+      });
+    }
+  }, [isOpen]);
 
   const getStatusConfig = (status: ClientStatus) => {
     switch (status) {
@@ -69,6 +109,23 @@ export default function ClientRow({ client, isDemo = false, onRowClick }: Client
         },
       }
     );
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    if (isDemo) {
+      alert("В демо-режиме удаление записи не отправляется на сервер.");
+      return;
+    }
+
+    if (window.confirm(`Вы действительно хотите удалить клиента "${client.name}"?`)) {
+      deleteClientMutation.mutate(client.id, {
+        onError: (err: any) => {
+          alert(`Ошибка удаления клиента: ${err.message || "Неизвестная ошибка"}`);
+        },
+      });
+    }
   };
 
   const formatDate = (dateStr?: string) => {
@@ -123,9 +180,10 @@ export default function ClientRow({ client, isDemo = false, onRowClick }: Client
       </td>
 
       {/* Status Column */}
-      <td className="p-4 py-4.5 align-middle relative">
-        <div ref={dropdownRef} className="inline-block text-left">
+      <td className="p-4 py-4.5 align-middle">
+        <div className="inline-block text-left">
           <button
+            ref={buttonRef}
             onClick={(e) => {
               e.stopPropagation();
               setIsOpen(!isOpen);
@@ -142,11 +200,18 @@ export default function ClientRow({ client, isDemo = false, onRowClick }: Client
             )}
           </button>
 
-          {/* Dropdown Menu */}
-          {isOpen && (
+          {/* Dropdown Menu using React Portal */}
+          {mounted && isOpen && createPortal(
             <div
+              ref={dropdownRef}
               onClick={(e) => e.stopPropagation()}
-              className="absolute left-4 mt-1.5 w-40 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl py-1.5 z-20 transform scale-100 origin-top-left transition-all duration-200 animate-scale-up"
+              style={{
+                position: "absolute",
+                top: `${coords.top + 6}px`,
+                left: `${coords.left}px`,
+                width: "160px",
+              }}
+              className="rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl py-1.5 z-50 transform scale-100 origin-top-left transition-all duration-200 animate-scale-up"
             >
               {/* Option NEW */}
               <button
@@ -180,9 +245,26 @@ export default function ClientRow({ client, isDemo = false, onRowClick }: Client
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                 Закрыт
               </button>
-            </div>
+            </div>,
+            document.body
           )}
         </div>
+      </td>
+
+      {/* Actions Column */}
+      <td className="p-4 py-4.5 align-middle text-right" onClick={(e) => e.stopPropagation()}>
+        <button
+          onClick={handleDelete}
+          disabled={deleteClientMutation.isPending}
+          className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl transition-all duration-200 cursor-pointer"
+          title="Удалить клиента"
+        >
+          {deleteClientMutation.isPending ? (
+            <Loader2 className="w-4 h-4 animate-spin text-slate-400" />
+          ) : (
+            <Trash2 className="w-4.5 h-4.5" />
+          )}
+        </button>
       </td>
     </tr>
   );
