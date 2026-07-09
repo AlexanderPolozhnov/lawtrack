@@ -2,10 +2,7 @@ services:
   backend:
     build: ./backend
     environment:
-      DB_HOST: postgres
-      DB_NAME: lawtrack
-      DB_USER: lawtrack_user
-      DB_PASSWORD: lawtrack_pass
+      DATABASE_URL: postgresql://lawtrack_user:lawtrack_pass@postgres:5432/lawtrack
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
