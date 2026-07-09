@@ -184,5 +184,8 @@ js-scripts/
 scripts/
 
 .vercel
-docs/
-guides/
+
+# Playwright test output
+**/playwright-report/
+**/test-results/
+
